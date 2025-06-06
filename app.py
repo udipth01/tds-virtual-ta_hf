@@ -52,6 +52,10 @@ app = gr.Interface(
     description="Ask questions related to Tools in Data Science"
 )
 print("Launching Gradio app...")
+
+app.launch()
+print("Launched Gradio app...")
+
 #if __name__ == "__main__":
 #    print("Launching Gradio app...")
 #    app.launch()
