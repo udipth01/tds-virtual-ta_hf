@@ -3,7 +3,7 @@ title: Tds Virtual Ta
 emoji: 🌍
 colorFrom: pink
 colorTo: green
-sdk: docker
+sdk: gradio
 pinned: false
 ---
 
