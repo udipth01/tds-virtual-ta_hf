@@ -24,11 +24,8 @@ def retrieve_answer(query, top_k=3):
         answers.append(f"[Score: {score:.4f}]\n{snippet}\n---")
     return "\n\n".join(answers)
 
-iface = gr.Interface(fn=retrieve_answer,
-                     inputs="text",
-                     outputs="text",
-                     title="TDS Virtual TA",
-                     description="Ask questions related to Tools in Data Science")
-
-if __name__ == "__main__":
-    iface.launch()
+app = gr.Interface(fn=retrieve_answer,
+                   inputs="text",
+                   outputs="text",
+                   title="TDS Virtual TA",
+                   description="Ask questions related to Tools in Data Science")
