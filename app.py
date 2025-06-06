@@ -4,7 +4,7 @@ import faiss
 import numpy as np
 from sentence_transformers import SentenceTransformer
 
-# Load embeddings and index
+# Load your data
 with open("embedding_data.json", "r", encoding="utf-8") as f:
     embedding_data = json.load(f)
 
@@ -24,8 +24,14 @@ def retrieve_answer(query, top_k=3):
         answers.append(f"[Score: {score:.4f}]\n{snippet}\n---")
     return "\n\n".join(answers)
 
-app = gr.Interface(fn=retrieve_answer,
-                   inputs="text",
-                   outputs="text",
-                   title="TDS Virtual TA",
-                   description="Ask questions related to Tools in Data Science")
+# **IMPORTANT**: assign your Interface to a variable named `app`
+app = gr.Interface(
+    fn=retrieve_answer,
+    inputs="text",
+    outputs="text",
+    title="TDS Virtual TA",
+    description="Ask questions related to Tools in Data Science"
+)
+
+# **DO NOT** call iface.launch() in Spaces environment!
+# Just define `app` and Spaces will run it automatically.
