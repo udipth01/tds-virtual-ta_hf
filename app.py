@@ -42,7 +42,7 @@ def retrieve_answer(query, top_k=3):
         snippet = result['combined_text'][:500]
         answers.append(f"[Score: {score:.4f}]\n{snippet}\n---")
     return "\n\n".join(answers)
-
+print("start Launching Gradio app...")
 # Gradio Interface
 app = gr.Interface(
     fn=retrieve_answer,
@@ -51,7 +51,7 @@ app = gr.Interface(
     title="TDS Virtual TA",
     description="Ask questions related to Tools in Data Science"
 )
-
+print("Launching Gradio app...")
 #if __name__ == "__main__":
 #    print("Launching Gradio app...")
 #    app.launch()
