@@ -4,13 +4,32 @@ import faiss
 import numpy as np
 from sentence_transformers import SentenceTransformer
 
-# Load your data
-with open("embedding_data.json", "r", encoding="utf-8") as f:
-    embedding_data = json.load(f)
+# Step 1: Load embedding data with error check
+try:
+    print("🔄 Loading embedding data...")
+    with open("embedding_data.json", "r", encoding="utf-8") as f:
+        embedding_data = json.load(f)
+    print("✅ Loaded embedding data.")
+except Exception as e:
+    print("❌ Error loading embedding data:", e)
 
-index = faiss.read_index("my_index.faiss")
-model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+# Step 2: Load FAISS index with error check
+try:
+    print("🔄 Loading FAISS index...")
+    index = faiss.read_index("my_index.faiss")
+    print("✅ FAISS index loaded.")
+except Exception as e:
+    print("❌ Error loading FAISS index:", e)
 
+# Step 3: Load sentence-transformer model with error check
+try:
+    print("🔄 Loading SentenceTransformer model...")
+    model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+    print("✅ Model loaded successfully.")
+except Exception as e:
+    print("❌ Error loading model:", e)
+
+# Function to retrieve answers
 def retrieve_answer(query, top_k=3):
     query_emb = model.encode(query, convert_to_numpy=True)
     query_emb = query_emb / np.linalg.norm(query_emb)
@@ -24,7 +43,7 @@ def retrieve_answer(query, top_k=3):
         answers.append(f"[Score: {score:.4f}]\n{snippet}\n---")
     return "\n\n".join(answers)
 
-# **IMPORTANT**: assign your Interface to a variable named `app`
+# Gradio Interface
 app = gr.Interface(
     fn=retrieve_answer,
     inputs="text",
@@ -32,6 +51,3 @@ app = gr.Interface(
     title="TDS Virtual TA",
     description="Ask questions related to Tools in Data Science"
 )
-
-# **DO NOT** call iface.launch() in Spaces environment!
-# Just define `app` and Spaces will run it automatically.
