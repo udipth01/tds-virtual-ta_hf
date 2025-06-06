@@ -8,9 +8,6 @@ WORKDIR /code
 COPY requirements.txt .
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Copy the app code
-COPY app /code/app
-
 # Expose the port
 EXPOSE 7860
 
