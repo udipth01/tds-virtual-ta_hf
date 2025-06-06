@@ -51,3 +51,7 @@ app = gr.Interface(
     title="TDS Virtual TA",
     description="Ask questions related to Tools in Data Science"
 )
+
+#if __name__ == "__main__":
+#    print("Launching Gradio app...")
+#    app.launch()
