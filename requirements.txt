@@ -1,4 +1,5 @@
-gradio==4.27.0
-faiss-cpu==1.7.4
-sentence-transformers==2.6.1
-numpy==1.24.3
+fastapi
+uvicorn
+sentence-transformers
+faiss-cpu
+numpy
