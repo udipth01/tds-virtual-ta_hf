@@ -5,7 +5,7 @@ colorFrom: green
 colorTo: blue
 sdk: docker
 pinned: false
-app_file: app.py
+app_file: app/main.py
 ---
 
 # 🤖 TDS Virtual TA
