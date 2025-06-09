@@ -13,4 +13,4 @@ An API for answering IITM Tools in Data Science (TDS) questions using FAISS and 
 ## How to Run
 
 ```bash
-uvicorn app.main:app --reload
+uvicorn main:app --reload
