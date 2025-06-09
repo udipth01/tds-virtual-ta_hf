@@ -4,7 +4,7 @@ emoji: 🤖
 colorFrom: indigo
 colorTo: pink
 sdk: docker
-app_file: app.py
+app_file: Dockerfile
 ---
 # TDS Virtual TA
 
