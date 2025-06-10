@@ -1,5 +1,6 @@
 import os
 os.environ['HF_HOME'] = '/tmp/huggingface'  # <--- Add this line at the very top
+print("OpenAI key found:", "OPENAI_API_KEY" in os.environ)
 
 from fastapi import FastAPI, Request
 from pydantic import BaseModel
