@@ -3,8 +3,8 @@ title: TDS Virtual TA FAPI
 emoji: 🤖
 colorFrom: indigo
 colorTo: pink
-sdk: fastapi
-app_file: app/main.py
+sdk: docker
+
 ---
 # TDS Virtual TA
 

@@ -1,6 +1,5 @@
 fastapi
 uvicorn
-pydantic
-numpy
-faiss-cpu
 sentence-transformers
+faiss-cpu
+numpy
