@@ -1,5 +1,6 @@
 import os
 os.environ['HF_HOME'] = '/tmp/huggingface'  # <--- Add this line at the very top
+openai_key = os.getenv("OPENAI_API_KEY")
 print("OpenAI key found:", "OPENAI_API_KEY" in os.environ)
 
 from fastapi import FastAPI, Request
@@ -30,4 +31,4 @@ def ask_question(query: Query):
 
 @app.get("/")
 def root():
-    return {"message": "TDS Virtual TA API is running!"}
+    return {"message": "TDS Virtual TA API is running on main web!"}
