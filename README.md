@@ -4,7 +4,7 @@ emoji: 🤖
 colorFrom: indigo
 colorTo: pink
 sdk: docker
-
+app_port: 7860
 ---
 # TDS Virtual TA
 
