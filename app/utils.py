@@ -1,6 +1,12 @@
+import os
 import json
 import faiss
 import numpy as np
+
+# Set Hugging Face cache directory to a location with write permissions (important for HF Spaces)
+os.environ['HF_HOME'] = '/tmp/huggingface'
+os.makedirs('/tmp/huggingface', exist_ok=True)
+
 from sentence_transformers import SentenceTransformer
 
 # Load model, embeddings, index on startup
@@ -9,6 +15,7 @@ with open("app/embedding_data.json", "r", encoding="utf-8") as f:
 
 index = faiss.read_index("app/my_index.faiss")
 model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+
 
 def retrieve_answer(query, top_k=3):
     query_emb = model.encode(query, convert_to_numpy=True)

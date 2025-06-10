@@ -1,3 +1,6 @@
+import os
+os.environ['HF_HOME'] = '/tmp/huggingface'  # <--- Add this line at the very top
+
 from fastapi import FastAPI, Request
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
