@@ -31,4 +31,5 @@ def ask_question(query: Query):
 
 @app.get("/")
 def root():
+    print("OpenAI key found:", "OPENAI_API_KEY" in os.environ)
     return {"message": "TDS Virtual TA API is running on main web!"}
