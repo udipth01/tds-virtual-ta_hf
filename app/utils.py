@@ -4,6 +4,8 @@ import json
 import faiss
 import numpy as np
 import openai
+from dotenv import load_dotenv
+load_dotenv()  # Ensure this is done before reading the env vars
 
 # Set HF cache dir (safe for Hugging Face Spaces)
 os.environ['HF_HOME'] = '/tmp/huggingface'
@@ -12,6 +14,9 @@ os.makedirs('/tmp/huggingface', exist_ok=True)
 # Configure AI‑Pipe (OpenAI proxy)
 openai.api_key = os.getenv("OPENAI_API_KEY")
 openai.api_base = os.getenv("OPENAI_BASE_URL", "https://aipipe.org/openai/v1")
+
+print("OpenAI key from env:", os.getenv("OPENAI_API_KEY"))
+
 
 # Load embedding data
 with open("app/embedding_data.json", "r", encoding="utf-8") as f:
@@ -42,11 +47,13 @@ def retrieve_answer(query, top_k=3):
 
     # AI-Pipe model response
     try:
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": prompt}]
+        response = openai.Completion.create(
+            model="text-davinci-003",  # Or whatever AI‑Pipe supports
+            prompt=prompt,
+            temperature=0.7,
+            max_tokens=500
         )
-        answer = response.choices[0].message.content.strip()
+        answer = response.choices[0].text.strip()
     except Exception as e:
         answer = f"LLM error: {str(e)}"
 

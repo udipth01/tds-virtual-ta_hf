@@ -1,0 +1,29 @@
+
+========================================================================================================================
+⚠️ The current version of promptfoo 0.114.7 is lower than the latest available version 0.115.0.
+
+Please run npx promptfoo@latest or npm install -g promptfoo@latest to update.
+========================================================================================================================
+
+Warning: Expected top-level "prompts" property in config or a test variable named "prompt"
+Running 4 concurrent evaluations with up to 4 threads...
+[HTTP Provider] Content-Type is application/json, but body is a string. This is likely to cause unexpected results. It should be an object or array. Body: {
+  "question": "{{ question }}"{% if image %},
+  "image": "{{ image }}"{% endif %}
+}
+ headers: {"content-type":"application/json"}
+[HTTP Provider] Content-Type is application/json, but body is a string. This is likely to cause unexpected results. It should be an object or array. Body: {
+  "question": "{{ question }}"{% if image %},
+  "image": "{{ image }}"{% endif %}
+}
+ headers: {"content-type":"application/json"}
+[HTTP Provider] Content-Type is application/json, but body is a string. This is likely to cause unexpected results. It should be an object or array. Body: {
+  "question": "{{ question }}"{% if image %},
+  "image": "{{ image }}"{% endif %}
+}
+ headers: {"content-type":"application/json"}
+[HTTP Provider] Content-Type is application/json, but body is a string. This is likely to cause unexpected results. It should be an object or array. Body: {
+  "question": "{{ question }}"{% if image %},
+  "image": "{{ image }}"{% endif %}
+}
+ headers: {"content-type":"application/json"}
