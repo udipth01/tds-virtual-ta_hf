@@ -1,7 +1,10 @@
-faiss-cpu
-numpy
-sentence-transformers
-openai
 fastapi
+pydantic
+python-multipart
 uvicorn
+openai
+sentence-transformers
+faiss-cpu
+pytesseract
+Pillow
 python-dotenv

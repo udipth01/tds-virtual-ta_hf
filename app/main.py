@@ -1,5 +1,6 @@
 import os
 import json
+import base64
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -15,12 +16,12 @@ os.makedirs('/tmp/huggingface', exist_ok=True)
 
 # Check if OpenAI API key is loaded
 openai_key = os.getenv("OPENAI_API_KEY")
-print("OpenAI key found:", "OPENAI_API_KEY" in os.environ)
+print("OpenAI key found:", bool(openai_key))
 
 # Initialize FastAPI app
 app = FastAPI()
 
-# Enable CORS (optional for Hugging Face Spaces)
+# Enable CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -28,18 +29,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Optional Pydantic model (if needed by other clients)
+# Optional Pydantic model
 class Query(BaseModel):
     question: str
+    image: str = None  # Optional base64-encoded image
 
-# Main API endpoint
+# API endpoint
 @app.post("/api/")
 async def ask_question(request: Request):
     try:
-        # Try reading properly formatted JSON
         body = await request.json()
     except Exception:
-        # Fallback if the body is a stringified JSON
         body_text = await request.body()
         try:
             body = json.loads(body_text)
@@ -47,18 +47,20 @@ async def ask_question(request: Request):
             return {"error": f"Invalid request body: {str(e)}"}
 
     question = body.get("question", "")
+    image_base64 = body.get("image")
+
     if not question:
         return {"error": "Missing 'question' field in request."}
 
-    # Get answer using your vector search + LLM logic
-    answer, links = retrieve_answer(question)
+    # Forward question + image to utils
+    answer, links = retrieve_answer(question, image_base64)
 
     return {
         "answer": answer,
         "links": links
     }
 
-# Health check or homepage endpoint
+# Health check endpoint
 @app.get("/")
 def root():
-    return {"message": "TDS Virtual TA API is running on main web!"}
+    return {"message": "TDS Virtual TA API is running!"}
