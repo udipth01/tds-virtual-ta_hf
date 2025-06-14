@@ -9,6 +9,7 @@ import base64
 import pytesseract
 from PIL import Image
 from io import BytesIO
+from openai import OpenAI
 
 # Set Hugging Face cache dirs
 os.environ['HF_HOME'] = '/tmp/huggingface'
@@ -19,10 +20,15 @@ os.makedirs('/tmp/huggingface', exist_ok=True)
 
 # Load keys
 load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
-openai.api_base = os.getenv("OPENAI_BASE_URL", "https://aipipe.org/openai/v1")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+OPENAI_API_BASE = os.getenv("OPENAI_BASE_URL", "https://aipipe.org/openai/v1")
 
-print("OpenAI key loaded:", bool(openai.api_key))
+client = OpenAI(
+    api_key=OPENAI_API_KEY,
+    base_url=OPENAI_API_BASE
+)
+
+print("OpenAI key loaded:", bool(OPENAI_API_KEY))
 
 from sentence_transformers import SentenceTransformer
 
@@ -62,27 +68,21 @@ def retrieve_answer(query, image=None, top_k=3):
         results.append((score, snippet, result.get("url", "https://discourse.onlinedegree.iitm.ac.in/")))
 
     context = "\n\n".join([f"{text}" for _, text, _ in results])
-    
+
     # Chat-style prompt
     messages = [
-        {
-            "role": "system",
-            "content": "You are a helpful virtual teaching assistant for the IIT Madras Online BSc degree. Use the context snippets to answer the question as accurately and concisely as possible."
-        },
-        {
-            "role": "user",
-            "content": f"Context:\n{context}\n\nQuestion: {query}"
-        }
+        {"role": "system", "content": "You are a helpful virtual teaching assistant for the IIT Madras Online BSc degree. Use the context snippets to answer the question as accurately and concisely as possible."},
+        {"role": "user", "content": f"Context:\n{context}\n\nQuestion: {query}"}
     ]
 
     try:
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=messages,
             temperature=0.7,
             max_tokens=500
         )
-        answer = response["choices"][0]["message"]["content"].strip()
+        answer = response.choices[0].message.content.strip()
     except Exception as e:
         answer = f"LLM error: {str(e)}"
 
