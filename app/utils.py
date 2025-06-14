@@ -1,5 +1,13 @@
 # utils.py
 import os
+
+# Set Hugging Face cache directories explicitly (fixes read-only /.cache issue)
+os.environ['HF_HOME'] = '/tmp/huggingface'
+os.environ['TRANSFORMERS_CACHE'] = '/tmp/huggingface/transformers'
+os.environ['HF_DATASETS_CACHE'] = '/tmp/huggingface/datasets'
+os.environ['HUGGINGFACE_HUB_CACHE'] = '/tmp/huggingface/hub'
+os.makedirs('/tmp/huggingface', exist_ok=True)
+
 import json
 import faiss
 import numpy as np
