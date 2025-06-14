@@ -5,31 +5,29 @@ import faiss
 import numpy as np
 import openai
 from dotenv import load_dotenv
-load_dotenv()  # Ensure this is done before reading the env vars
+load_dotenv()  # Load env variables from .env
 
-# Set HF cache dir (safe for Hugging Face Spaces)
+# Set Hugging Face cache directory
 os.environ['HF_HOME'] = '/tmp/huggingface'
 os.makedirs('/tmp/huggingface', exist_ok=True)
 
-# Configure AI‑Pipe (OpenAI proxy)
+# Set OpenAI/AIPipe configuration
 openai.api_key = os.getenv("OPENAI_API_KEY")
 openai.api_base = os.getenv("OPENAI_BASE_URL", "https://aipipe.org/openai/v1")
 
-print("OpenAI key from env:", os.getenv("OPENAI_API_KEY"))
+print("OpenAI key loaded:", bool(openai.api_key))
 
-
-# Load embedding data
+# Load embeddings and FAISS index
 with open("app/embedding_data.json", "r", encoding="utf-8") as f:
     embedding_data = json.load(f)
 
-# Load FAISS index
 index = faiss.read_index("app/my_index.faiss")
 
-# Load sentence transformer (used for vector search)
+# Load sentence transformer
 from sentence_transformers import SentenceTransformer
 model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
 
-# Retrieve top_k results using vector search + LLM call via AI‑Pipe
+# Core retrieval + LLM answer generation
 def retrieve_answer(query, top_k=3):
     query_emb = model.encode(query, convert_to_numpy=True)
     query_emb = query_emb / np.linalg.norm(query_emb)
@@ -41,14 +39,18 @@ def retrieve_answer(query, top_k=3):
         snippet = result.get("combined_text", "")[:500]
         results.append((score, snippet, result.get("url", "https://discourse.onlinedegree.iitm.ac.in/")))
 
-    # Combine top snippets
+    # Build prompt for the language model
     context = "\n\n".join([f"{text}" for _, text, _ in results])
-    prompt = f"""You are a helpful virtual teaching assistant for an IIT Madras course. Based on the following forum snippets, answer the question concisely.\n\nContext:\n{context}\n\nQuestion: {query}"""
+    prompt = f"""You are a helpful virtual teaching assistant for an IIT Madras course. Based on the following forum snippets, answer the question concisely.
 
-    # AI-Pipe model response
+Context:
+{context}
+
+Question: {query}"""
+
     try:
         response = openai.Completion.create(
-            model="text-davinci-003",  # Or whatever AI‑Pipe supports
+            model="text-davinci-003",  # Replace with supported model if needed
             prompt=prompt,
             temperature=0.7,
             max_tokens=500
