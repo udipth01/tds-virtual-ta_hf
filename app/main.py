@@ -1,19 +1,26 @@
 import os
+import json
 from dotenv import load_dotenv
-load_dotenv()
-
-# Set Hugging Face cache directory (especially for Hugging Face Spaces)
-os.environ['HF_HOME'] = '/tmp/huggingface'
-
-from fastapi import FastAPI
-from pydantic import BaseModel
-from typing import Optional
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 from app.utils import retrieve_answer
 
+# Load environment variables
+load_dotenv()
+
+# Set Hugging Face cache directory (for Spaces compatibility)
+os.environ['HF_HOME'] = '/tmp/huggingface'
+os.makedirs('/tmp/huggingface', exist_ok=True)
+
+# Check if OpenAI API key is loaded
+openai_key = os.getenv("OPENAI_API_KEY")
+print("OpenAI key found:", "OPENAI_API_KEY" in os.environ)
+
+# Initialize FastAPI app
 app = FastAPI()
 
-# Enable CORS (useful if called from frontend or Promptfoo)
+# Enable CORS (optional for Hugging Face Spaces)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -21,22 +28,37 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Updated model to include optional image field
+# Optional Pydantic model (if needed by other clients)
 class Query(BaseModel):
     question: str
-    image: Optional[str] = None  # Promptfoo may send this even if unused
 
+# Main API endpoint
 @app.post("/api/")
-def ask_question(query: Query):
-    print("Received question:", query.question)
-    if query.image:
-        print("Received image (length):", len(query.image))  # Log if present
-    answer, links = retrieve_answer(query.question)
+async def ask_question(request: Request):
+    try:
+        # Try reading properly formatted JSON
+        body = await request.json()
+    except Exception:
+        # Fallback if the body is a stringified JSON
+        body_text = await request.body()
+        try:
+            body = json.loads(body_text)
+        except Exception as e:
+            return {"error": f"Invalid request body: {str(e)}"}
+
+    question = body.get("question", "")
+    if not question:
+        return {"error": "Missing 'question' field in request."}
+
+    # Get answer using your vector search + LLM logic
+    answer, links = retrieve_answer(question)
+
     return {
         "answer": answer,
         "links": links
     }
 
+# Health check or homepage endpoint
 @app.get("/")
 def root():
     return {"message": "TDS Virtual TA API is running on main web!"}
