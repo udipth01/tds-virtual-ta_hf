@@ -5,7 +5,6 @@ import faiss
 import numpy as np
 import openai
 from dotenv import load_dotenv
-from sentence_transformers import SentenceTransformer
 import base64
 import pytesseract
 from PIL import Image
@@ -24,6 +23,8 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 openai.api_base = os.getenv("OPENAI_BASE_URL", "https://aipipe.org/openai/v1")
 
 print("OpenAI key loaded:", bool(openai.api_key))
+
+from sentence_transformers import SentenceTransformer
 
 # Load sentence embedding model
 model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
